@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addAsset } from "@/store/slices/portfolioSlice";
+import { store } from "@/store/store";
+import { Asset } from "@/types/portfolio";
 
 export const useLocalStorage = () => {
   const dispatch = useDispatch();
