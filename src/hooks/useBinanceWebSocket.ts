@@ -1,67 +1,28 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { updatePrices } from "@/store/portfolioSlice";
-
-interface BinanceTickerData {
-  s: string;
-  c: string;
-  P: string;
-}
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { TOP_20_CRYPTOS } from "@/constants/cryptoList";
 
 export const useBinanceWebSocket = () => {
   const dispatch = useDispatch();
+  const assets = useSelector((state: RootState) => state.portfolio.assets);
 
   useEffect(() => {
-    const savedAssets = localStorage.getItem("portfolioAssets");
-    if (!savedAssets) return;
+    if (assets.length === 0) return;
 
-    const assets: { symbol: string }[] = JSON.parse(savedAssets);
-    if (!assets.length) return;
-
-    const symbols = assets.map(
-      (asset) => `${asset.symbol.toLowerCase()}usdt@ticker`
+    const validAssets = assets.filter((asset) =>
+      TOP_20_CRYPTOS.some((c) => c.symbol === asset.symbol)
     );
-    const streamName = symbols.join("/");
-    const wsUrl = `wss://stream.binance.com:9443/stream?streams=${streamName}`;
 
+    if (validAssets.length === 0) return;
+
+    const streams = validAssets
+      .map((asset) => `${asset.symbol.toLowerCase()}usdt@ticker`)
+      .join("/");
+
+    const wsUrl = `wss://stream.binance.com:9443/stream?streams=${streams}`;
     const socket = new WebSocket(wsUrl);
 
-    socket.onopen = () => {
-      console.log("WebSocket connected");
-    };
-
-    socket.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        if (data.stream && data.data) {
-          const streamData: BinanceTickerData = data.data;
-          dispatch(
-            updatePrices([
-              {
-                symbol: streamData.s.replace("USDT", ""),
-                price: parseFloat(streamData.c),
-                change24h: parseFloat(streamData.P),
-              },
-            ])
-          );
-        }
-      } catch (e) {
-        console.error("WebSocket parse error:", e);
-      }
-    };
-
-    socket.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
-
-    socket.onclose = () => {
-      console.log("WebSocket disconnected");
-    };
-
-    return () => {
-      if (socket.readyState === WebSocket.OPEN) {
-        socket.close();
-      }
-    };
-  }, [dispatch]);
+    return () => socket.close();
+  }, [assets, dispatch]);
 };

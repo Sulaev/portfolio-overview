@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addAsset } from "@/store/portfolioSlice";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { TOP_20_CRYPTOS } from "@/constants/cryptoList";
 import {
   Select,
   SelectContent,
@@ -11,12 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-const CRYPTO_OPTIONS = [
-  { symbol: "BTC", name: "Bitcoin" },
-  { symbol: "ETH", name: "Ethereum" },
-  { symbol: "SOL", name: "Solana" },
-];
+import { addAsset } from "@/store/portfolioSlice";
 
 export const AssetForm = () => {
   const dispatch = useDispatch();
@@ -25,7 +20,7 @@ export const AssetForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const crypto = CRYPTO_OPTIONS.find((c) => c.symbol === selectedCrypto);
+    const crypto = TOP_20_CRYPTOS.find((c) => c.symbol === selectedCrypto);
     if (!crypto || !amount) return;
 
     dispatch(
@@ -44,10 +39,10 @@ export const AssetForm = () => {
         <label className="block text-sm mb-1">Криптовалюта</label>
         <Select onValueChange={setSelectedCrypto} value={selectedCrypto}>
           <SelectTrigger>
-            <SelectValue placeholder="Выберите" />
+            <SelectValue placeholder="Выберите криптовалюту" />
           </SelectTrigger>
           <SelectContent>
-            {CRYPTO_OPTIONS.map((crypto) => (
+            {TOP_20_CRYPTOS.map((crypto) => (
               <SelectItem key={crypto.symbol} value={crypto.symbol}>
                 {crypto.name} ({crypto.symbol})
               </SelectItem>
