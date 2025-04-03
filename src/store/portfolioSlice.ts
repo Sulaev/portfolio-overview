@@ -23,11 +23,10 @@ export const portfolioSlice = createSlice({
   initialState,
   reducers: {
     addAsset: (state, action: PayloadAction<Omit<Asset, "id">>) => {
-      const newAsset = {
+      state.assets.push({
         id: uuidv4(),
         ...action.payload,
-      };
-      state.assets.push(newAsset);
+      });
     },
     removeAsset: (state, action: PayloadAction<string>) => {
       state.assets = state.assets.filter(
@@ -37,7 +36,11 @@ export const portfolioSlice = createSlice({
     updatePrices: (
       state,
       action: PayloadAction<
-        { symbol: string; price: number; change24h: number }[]
+        {
+          symbol: string;
+          price: number;
+          change24h: number;
+        }[]
       >
     ) => {
       action.payload.forEach((update) => {
