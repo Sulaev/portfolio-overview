@@ -22,17 +22,25 @@ export const portfolioSlice = createSlice({
   name: "portfolio",
   initialState,
   reducers: {
-    addAsset: (state, action: PayloadAction<Omit<Asset, "id">>) => {
-      state.assets.push({
-        id: uuidv4(),
-        ...action.payload,
-      });
+    addAsset: {
+      reducer: (state, action: PayloadAction<Asset>) => {
+        state.assets.push(action.payload);
+      },
+      prepare: (asset: Omit<Asset, "id">) => ({
+        payload: {
+          ...asset,
+          id: uuidv4(),
+          symbol: asset.symbol.toUpperCase(), // Нормализуем символы
+        },
+      }),
     },
+
     removeAsset: (state, action: PayloadAction<string>) => {
       state.assets = state.assets.filter(
         (asset) => asset.id !== action.payload
       );
     },
+
     updatePrices: (
       state,
       action: PayloadAction<
@@ -43,12 +51,18 @@ export const portfolioSlice = createSlice({
         }[]
       >
     ) => {
-      action.payload.forEach((update) => {
-        const asset = state.assets.find((a) => a.symbol === update.symbol);
-        if (asset) {
-          asset.price = update.price;
-          asset.change24h = update.change24h;
-        }
+      state.assets = state.assets.map((asset) => {
+        const update = action.payload.find(
+          (u) => u.symbol.toUpperCase() === asset.symbol
+        );
+
+        if (!update) return asset;
+
+        return {
+          ...asset,
+          price: Number(update.price) || asset.price,
+          change24h: Number(update.change24h) || asset.change24h,
+        };
       });
     },
   },

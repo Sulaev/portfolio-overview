@@ -1,67 +1,57 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { TOP_20_CRYPTOS } from "@/constants/cryptoList";
 import { updatePrices } from "@/store/portfolioSlice";
-
-interface BinanceTickerData {
-  s: string;
-  c: string;
-  P: string;
-}
 
 export const useBinanceWebSocket = () => {
   const dispatch = useDispatch();
+  const assets = useSelector((state: RootState) => state.portfolio.assets);
 
   useEffect(() => {
-    const savedAssets = localStorage.getItem("portfolioAssets");
-    if (!savedAssets) return;
+    if (assets.length === 0) return;
 
-    const assets: { symbol: string }[] = JSON.parse(savedAssets);
-    if (!assets.length) return;
+    const MAX_STREAMS_PER_CONNECTION = 10;
+    const validAssets = assets
+      .filter((asset) => TOP_20_CRYPTOS.some((c) => c.symbol === asset.symbol))
+      .slice(0, MAX_STREAMS_PER_CONNECTION);
 
-    const symbols = assets.map(
-      (asset) => `${asset.symbol.toLowerCase()}usdt@ticker`
-    );
-    const streamName = symbols.join("/");
-    const wsUrl = `wss://stream.binance.com:9443/stream?streams=${streamName}`;
+    if (validAssets.length === 0) return;
 
+    const streams = validAssets
+      .map((asset) => `${asset.symbol.toLowerCase()}usdt@ticker`)
+      .join("/");
+
+    const wsUrl = `wss://stream.binance.com:9443/stream?streams=${streams}`;
     const socket = new WebSocket(wsUrl);
 
-    socket.onopen = () => {
-      console.log("WebSocket connected");
-    };
-
-    socket.onmessage = (event) => {
+    const handleMessage = (event: MessageEvent) => {
       try {
         const data = JSON.parse(event.data);
-        if (data.stream && data.data) {
-          const streamData: BinanceTickerData = data.data;
-          dispatch(
-            updatePrices([
-              {
-                symbol: streamData.s.replace("USDT", ""),
-                price: parseFloat(streamData.c),
-                change24h: parseFloat(streamData.P),
-              },
-            ])
-          );
+        if (!data?.stream || !data?.data) return;
+
+        const symbol = data.stream
+          .split("@")[0]
+          .toUpperCase()
+          .replace("USDT", "");
+        const price = parseFloat(data.data.c);
+        const change24h = parseFloat(data.data.P);
+
+        if (!isNaN(price) && !isNaN(change24h)) {
+          dispatch(updatePrices([{ symbol, price, change24h }]));
         }
-      } catch (e) {
-        console.error("WebSocket parse error:", e);
+      } catch (error) {
+        console.error("WebSocket parse error:", error);
       }
     };
 
-    socket.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
-
-    socket.onclose = () => {
-      console.log("WebSocket disconnected");
-    };
+    socket.addEventListener("message", handleMessage);
 
     return () => {
+      socket.removeEventListener("message", handleMessage);
       if (socket.readyState === WebSocket.OPEN) {
         socket.close();
       }
     };
-  }, [dispatch]);
+  }, [assets, dispatch]);
 };
