@@ -9,7 +9,9 @@ import { cn } from "@/lib/utils";
 const ITEMS_PER_PAGE = 20;
 
 export const AssetTable = () => {
-  const assets = useSelector((state: RootState) => state.portfolio.assets);
+  const assets = useSelector((state: RootState) => {
+    return state.portfolio.assets;
+  });
   const [currentPage, setCurrentPage] = useState(1);
 
   const formatCurrency = (value: number) =>
