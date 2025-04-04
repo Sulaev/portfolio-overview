@@ -65,31 +65,39 @@ export const AssetForm = () => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex flex-col md:flex-row gap-4 items-end"
-    >
-      <div className="w-full">
-        <label className="block text-sm mb-1">Криптовалюта</label>
-        <Select
-          onValueChange={setSelectedCrypto}
-          value={selectedCrypto}
-          disabled={isSubmitting}
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Выберите криптовалюту" />
-          </SelectTrigger>
-          <SelectContent>
-            {TOP_20_CRYPTOS.map((crypto) => (
-              <SelectItem key={crypto.symbol} value={crypto.symbol}>
-                {crypto.name} ({crypto.symbol})
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+    <div className="flex justify-end">
+      <Button type="button" className="w-full md:w-auto">
+        Добавить валюту
+      </Button>
+    </div>
+  );
+};
 
-      <div className="w-full">
+// <form
+//   onSubmit={handleSubmit}
+//   className="flex flex-col md:flex-row gap-4 items-end"
+// >
+//   <div className="w-full">
+//     <label className="block text-sm mb-1">Криптовалюта</label>
+//     <Select
+//       onValueChange={setSelectedCrypto}
+//       value={selectedCrypto}
+//       disabled={isSubmitting}
+//     >
+//       <SelectTrigger className="w-full">
+//         <SelectValue placeholder="Выберите криптовалюту" />
+//       </SelectTrigger>
+//       <SelectContent>
+//         {TOP_20_CRYPTOS.map((crypto) => (
+//           <SelectItem key={crypto.symbol} value={crypto.symbol}>
+//             {crypto.name} ({crypto.symbol})
+//           </SelectItem>
+//         ))}
+//       </SelectContent>
+//     </Select>
+//   </div>
+
+/* <div className="w-full">
         <label className="block text-sm mb-1">Количество</label>
         <Input
           type="number"
@@ -105,15 +113,5 @@ export const AssetForm = () => {
           placeholder="0.00"
           disabled={isSubmitting}
         />
-      </div>
-
-      <Button
-        type="submit"
-        disabled={isSubmitting || !selectedCrypto || !amount}
-        className="w-full md:w-auto"
-      >
-        {isSubmitting ? "Добавляем..." : "Добавить"}
-      </Button>
-    </form>
-  );
-};
+      </div> */
+// </form>
