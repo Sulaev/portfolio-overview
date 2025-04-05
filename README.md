@@ -17,3 +17,27 @@ bun dev
 Open [http://localhost:3000/portfolio](http://localhost:3000/portfolio) with your browser to see the result.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+
+Структура проекта
+/src
+│
+├── /app               # Next.js app router
+│   └── /portfolio     # Основная страница
+│
+├── /components        # UI компоненты
+│   ├── AssetForm.tsx  # Форма добавления активов
+│   ├── AssetItem.tsx  # Элемент списка активов
+│   ├── AssetTable.tsx # Таблица с пагинацией
+│   └── ui/            # Shadcn/ui компоненты
+│
+├── /constants         # Константы
+│   └── cryptoList.ts  # Топ-100 криптовалют
+│
+├── /store             # Состояние приложения
+│   ├── portfolioSlice.ts # Redux логика
+│   └── store.ts       # Redux store
+│
+├── /lib               # Вспомогательные функции
+│   └── utils.ts       # Утилиты форматирования
+│
+└── /api               # API клиенты (если есть)****
