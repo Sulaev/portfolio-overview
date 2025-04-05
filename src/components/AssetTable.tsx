@@ -4,13 +4,24 @@ import { AssetItem } from "./AssetItem";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const ITEMS_PER_PAGE = 20;
+const ITEMS_PER_PAGE = 100;
 
 export const AssetTable = () => {
+  const [isMounted, setIsMounted] = useState(false);
   const assets = useSelector((state: RootState) => state.portfolio.assets);
   const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return (
+      <div className="border rounded-lg overflow-hidden min-h-[300px]"></div>
+    );
+  }
 
   const totalPages = Math.ceil(assets.length / ITEMS_PER_PAGE);
   const paginatedAssets = assets.slice(

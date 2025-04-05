@@ -1,6 +1,5 @@
 import { Asset } from "@/types/portfolio";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from "uuid";
 
 interface PortfolioState {
   assets: Asset[];
@@ -27,18 +26,24 @@ export const portfolioSlice = createSlice({
   reducers: {
     addAsset: {
       reducer: (state, action: PayloadAction<Asset>) => {
-        state.assets.push(action.payload);
-        saveAssetsToLocalStorage(state.assets);
+        const existingAsset = state.assets.find(
+          (asset) => asset.symbol === action.payload.symbol
+        );
+
+        if (existingAsset) {
+          existingAsset.amount += action.payload.amount;
+        } else {
+          state.assets.push(action.payload);
+        }
       },
       prepare: (asset: Omit<Asset, "id">) => ({
         payload: {
           ...asset,
-          id: uuidv4(),
+          id: crypto.randomUUID(),
           symbol: asset.symbol.toUpperCase(),
         },
       }),
     },
-
     removeAsset: (state, action: PayloadAction<string>) => {
       state.assets = state.assets.filter(
         (asset) => asset.id !== action.payload
