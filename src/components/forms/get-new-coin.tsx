@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { TOP_20_CRYPTOS } from "@/constants/cryptoList";
+import { TOP_CRYPTOS } from "@/constants/cryptoList";
 import {
   Select,
   SelectContent,
@@ -44,7 +44,7 @@ export const GetNewCoinForm = ({ onClose }: GetNewCoinFormProps) => {
         return;
       }
 
-      const crypto = TOP_20_CRYPTOS.find((c) => c.symbol === selectedCrypto);
+      const crypto = TOP_CRYPTOS.find((c) => c.symbol === selectedCrypto);
       if (!crypto) return;
 
       dispatch(
@@ -79,7 +79,7 @@ export const GetNewCoinForm = ({ onClose }: GetNewCoinFormProps) => {
             <SelectValue placeholder="Выберите криптовалюту" />
           </SelectTrigger>
           <SelectContent>
-            {TOP_20_CRYPTOS.map((crypto) => (
+            {TOP_CRYPTOS.map((crypto) => (
               <SelectItem key={crypto.symbol} value={crypto.symbol}>
                 {crypto.name} ({crypto.symbol})
               </SelectItem>

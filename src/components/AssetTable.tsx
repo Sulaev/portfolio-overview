@@ -6,7 +6,7 @@ import { RootState } from "@/store/store";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-const ITEMS_PER_PAGE = 20;
+const ITEMS_PER_PAGE = 100;
 
 export const AssetTable = () => {
   const assets = useSelector((state: RootState) => state.portfolio.assets);

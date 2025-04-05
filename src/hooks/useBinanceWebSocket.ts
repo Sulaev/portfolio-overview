@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { TOP_20_CRYPTOS } from "@/constants/cryptoList";
+import { TOP_CRYPTOS } from "@/constants/cryptoList";
 import { updatePrices } from "@/store/portfolioSlice";
 
 export const useBinanceWebSocket = () => {
@@ -13,7 +13,7 @@ export const useBinanceWebSocket = () => {
 
     const MAX_STREAMS_PER_CONNECTION = 10;
     const validAssets = assets
-      .filter((asset) => TOP_20_CRYPTOS.some((c) => c.symbol === asset.symbol))
+      .filter((asset) => TOP_CRYPTOS.some((c) => c.symbol === asset.symbol))
       .slice(0, MAX_STREAMS_PER_CONNECTION);
 
     if (validAssets.length === 0) return;
