@@ -14,8 +14,24 @@ Next, opening a project in VSCode
 ```bash
 code portfolio-overview.code-workspace
 ```
-Finaly, open [http://localhost:3000/portfolio](http://localhost:3000/portfolio) with your browser to see the result.
+Also, before running, don't forget to install dependencies
+```bash
+yarn 
+```
+or 
+```bash
+npm install
+```
+or 
+```bash
+yarn install
+```
 
+Finaly, enter
+```bash
+yarn dev
+```
+and open [http://localhost:3000/portfolio](http://localhost:3000/portfolio) with your browser to see the result.
 
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
