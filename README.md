@@ -14,6 +14,6 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000/portfolio)] with your browser to see the result.
+Open [http://localhost:3000/portfolio](http://localhost:3000/portfolio) with your browser to see the result.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
