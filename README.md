@@ -2,19 +2,21 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+First, clone the repository
+Open a terminal and run:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/Sulaev/portfolio-overview.git
+cd portfolio-overview
 ```
+Next, opening a project in VSCode
 
-Open [http://localhost:3000/portfolio](http://localhost:3000/portfolio) with your browser to see the result.
+```bash
+code portfolio-overview.code-workspace
+```
+Finaly, open [http://localhost:3000/portfolio](http://localhost:3000/portfolio) with your browser to see the result.
+
+
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
