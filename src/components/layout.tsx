@@ -1,3 +1,5 @@
+"use client";
+
 import styles from "@/components/layout.module.css";
 import { cn } from "@/lib/utils";
 

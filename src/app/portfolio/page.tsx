@@ -1,4 +1,5 @@
 "use client";
+
 import { AssetTable } from "@/components/AssetTable";
 import { AssetForm } from "@/components/AssetForm";
 import { useBinanceWebSocket } from "@/hooks/useBinanceWebSocket";

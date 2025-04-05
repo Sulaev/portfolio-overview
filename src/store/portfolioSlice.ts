@@ -1,14 +1,6 @@
+import { Asset } from "@/types/portfolio";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
-
-interface Asset {
-  id: string;
-  symbol: string;
-  name: string;
-  amount: number;
-  price?: number;
-  change24h?: number;
-}
 
 interface PortfolioState {
   assets: Asset[];

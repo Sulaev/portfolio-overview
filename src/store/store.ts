@@ -2,10 +2,18 @@ import { configureStore } from "@reduxjs/toolkit";
 import portfolioReducer from "./portfolioSlice";
 import { saveAssetsToLocalStorage } from "@/lib/localStorage";
 
+const loadInitialState = () => {
+  if (typeof window === "undefined") {
+    return { portfolio: { assets: [] } };
+  }
+  return undefined;
+};
+
 export const store = configureStore({
   reducer: {
     portfolio: portfolioReducer,
   },
+  preloadedState: loadInitialState(),
 });
 
 store.subscribe(() => {
