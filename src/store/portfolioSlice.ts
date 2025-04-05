@@ -14,8 +14,19 @@ interface PortfolioState {
   assets: Asset[];
 }
 
+const loadAssetsFromLocalStorage = (): Asset[] => {
+  if (typeof window === "undefined") return [];
+  const saved = localStorage.getItem("portfolioAssets");
+  return saved ? JSON.parse(saved) : [];
+};
+
+const saveAssetsToLocalStorage = (assets: Asset[]) => {
+  if (typeof window === "undefined") return;
+  localStorage.setItem("portfolioAssets", JSON.stringify(assets));
+};
+
 const initialState: PortfolioState = {
-  assets: [],
+  assets: loadAssetsFromLocalStorage(),
 };
 
 export const portfolioSlice = createSlice({
@@ -25,12 +36,13 @@ export const portfolioSlice = createSlice({
     addAsset: {
       reducer: (state, action: PayloadAction<Asset>) => {
         state.assets.push(action.payload);
+        saveAssetsToLocalStorage(state.assets);
       },
       prepare: (asset: Omit<Asset, "id">) => ({
         payload: {
           ...asset,
           id: uuidv4(),
-          symbol: asset.symbol.toUpperCase(), // Нормализуем символы
+          symbol: asset.symbol.toUpperCase(),
         },
       }),
     },
@@ -39,6 +51,7 @@ export const portfolioSlice = createSlice({
       state.assets = state.assets.filter(
         (asset) => asset.id !== action.payload
       );
+      saveAssetsToLocalStorage(state.assets);
     },
 
     updatePrices: (
@@ -64,9 +77,15 @@ export const portfolioSlice = createSlice({
           change24h: Number(update.change24h) || asset.change24h,
         };
       });
+      saveAssetsToLocalStorage(state.assets);
+    },
+
+    loadAssets: (state) => {
+      state.assets = loadAssetsFromLocalStorage();
     },
   },
 });
 
-export const { addAsset, removeAsset, updatePrices } = portfolioSlice.actions;
+export const { addAsset, removeAsset, updatePrices, loadAssets } =
+  portfolioSlice.actions;
 export default portfolioSlice.reducer;
